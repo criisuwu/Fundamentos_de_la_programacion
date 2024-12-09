@@ -50,16 +50,18 @@ Map showmap(Map robotMap)
 }
 
 // * termina
-int endgame(Map robotMap)
+int endgame(Map robotMap, int check)
 {
-
     robotMap.map[robotMap.x][robotMap.y] = 'R';
     robotMap = showmap(robotMap);
     std::cout << "------------------------------------------------------------------" << std::endl;
     std::cout << "No hay mas movimientos posibles" << std::endl;
     std::cout << "Ha hecho un total de " << robotMap.counter << " movimientos" << std::endl;
 
-    exit(0); // idk
+    printf ("check en end (antes): %i", check);
+    check++;
+    printf ("check en end (after): %i", check);
+    return(check);
 }
 
 // * Pido las coordenadas de donde va a ir el robot
@@ -100,7 +102,7 @@ Map placerobot(Map robotMap)
 }
 
 //hace que se mueva el robot para completar entero el mapa
-Map robotMove(Map robotMap)
+Map robotMove(Map robotMap, int check)
 {
     int movement_x[4] = {-1, 1, 0, 0};
     int movement_y[4] = {0, 0, -1, 1};
@@ -122,7 +124,8 @@ Map robotMove(Map robotMap)
             return (robotMap);
         }
     }
-    endgame(robotMap); //Muestra el mapa y el numero de movimientos
+    printf ("check en move: %i", check);
+    endgame(robotMap, check); //Muestra el mapa y el numero de movimientos
     return (robotMap);
 }
 
@@ -130,8 +133,9 @@ Map robotMove(Map robotMap)
 int main()
 {
     char next;
+    int check = 0;
     Map robotMap;
-    /* Map keepMap; */
+
     robotMap = initmap(robotMap); //inicializo el mapa con solo puntos
     robotMap = showmap(robotMap);
     robotMap = initRobot(robotMap); //Situo al robot en las coordenadas recibidas
@@ -143,8 +147,12 @@ int main()
 
     while (next >= 32 && next <= 126)
     {
-        robotMap = robotMove(robotMap);
-/*         robotMap = showmap(robotMap); */
+        robotMap = robotMove(robotMap, check);
+        if (check == 1)
+        {
+            printf("aaaaaaaaaaaaaaaaa");
+            break;
+        }
         std::cout << "Enter any printable character to continue..." << std::endl;
         std::cin >> next;
     }
@@ -154,5 +162,5 @@ int main()
         std::cin >> next;
     }
 
-    return 0;
+    return (0);
 }
