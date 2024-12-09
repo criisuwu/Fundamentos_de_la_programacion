@@ -44,6 +44,8 @@ Map initmap(Map robotMap)
 // * Muestro el mapa por la terminal
 Map showmap(Map robotMap)
 {
+    system("clear");
+
     for (int i = 0; i < 20; i++)
     {
         for (int j = 0; j < 20; j++)
@@ -95,8 +97,9 @@ Map placerobot(Map robotMap)
 // * avanza a la derecha
 Map moveright(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x + 1][robotMap.y] = 'R';
+    robotMap.y = robotMap.y + 1;
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap.map[robotMap.x][robotMap.y - 1] = '*';
 
     return (robotMap);
 }
@@ -104,8 +107,9 @@ Map moveright(Map robotMap)
 // * avanza a la izquierda
 Map moveleft(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x - 1][robotMap.y] = 'R';
+    robotMap.x = robotMap.x - 1;
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap.map[robotMap.x + 1][robotMap.y] = '*';
 
     return (robotMap);
 }
@@ -113,8 +117,9 @@ Map moveleft(Map robotMap)
 // * avanza hacia arriba
 Map moveup(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x][robotMap.y - 1] = 'R';
+    robotMap.y = robotMap.y -1;
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap.map[robotMap.x][robotMap.y + 1] = '*';
 
     return (robotMap);
 }
@@ -122,8 +127,9 @@ Map moveup(Map robotMap)
 // * avanza hacia abajo
 Map movedown(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x][robotMap.y + 1] = 'R';
+    robotMap.y = robotMap.y + 1;
+    robotMap.map[robotMap.x][robotMap.y] ='R';
+    robotMap.map[robotMap.x][robotMap.y - 1] = '*';
 
     return (robotMap);
 }
@@ -131,8 +137,11 @@ Map movedown(Map robotMap)
 // * avanza a arriba-derecha
 Map moveUpRight(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x + 1][robotMap.y - 1] = 'R';
+    robotMap.x = robotMap.x + 1;
+    robotMap.y = robotMap.y - 1;
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap.map[robotMap.x - 1][robotMap.y + 1] = '*';
+
 
     return (robotMap);
 }
@@ -140,8 +149,10 @@ Map moveUpRight(Map robotMap)
 // * avanza a arriba-izquierda
 Map moveUpLeft(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x - 1][robotMap.y - 1] = 'R';
+    robotMap.x = robotMap.x - 1;
+    robotMap.y = robotMap.y - 1;
+    robotMap.map[robotMap.x][robotMap.y]= 'R';
+    robotMap.map[robotMap.x + 1][robotMap.y + 1] = '*';
 
     return (robotMap);
 }
@@ -149,8 +160,10 @@ Map moveUpLeft(Map robotMap)
 // * avanza a abajo-derecha
 Map moveDownRight(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x + 1][robotMap.y + 1] = 'R';
+    robotMap.x = robotMap.x + 1;
+    robotMap.y = robotMap.y + 1;
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap.map[robotMap.x - 1][robotMap.y - 1] = '*';
 
     return (robotMap);
 }
@@ -158,93 +171,24 @@ Map moveDownRight(Map robotMap)
 // * avanza a abajo-izquierda
 Map moveDownLeft(Map robotMap)
 {
-    robotMap.map[robotMap.x][robotMap.y] = '*';
-    robotMap.map[robotMap.x - 1][robotMap.y + 1] = 'R';
+    robotMap.x = robotMap.x - 1;
+    robotMap.y = robotMap.y + 1;;
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap.map[robotMap.x + 1][robotMap.y - 1] = '*';
 
     return (robotMap);
 }
 
-// * Verifico que el camino no este bloqueado
-Map checkpath(Map robotMap)
+//hace que se mueva el robot para completar entero el mapa
+Map robotMove(Map robotMap)
 {
-    for (int i = 0; i < 20; i++)
-    {
-        for (int j = 0; j < 20; j++)
-        {
-            if (robotMap.map[robotMap.x + 1][robotMap.y] == '*')
-            {
-                if (robotMap.map[robotMap.x + 1][robotMap.y + 1] == '*')
-                {
-                    if (robotMap.map[robotMap.x][robotMap.y + 1] == '*')
-                    {
-                        if (robotMap.map[robotMap.x - 1][robotMap.y + 1] == '*')
-                        {
-                            if (robotMap.map[robotMap.x + 1][robotMap.y] == '*')
-                            {
-                                if (robotMap.map[robotMap.x - 1][robotMap.y - 1] == '*')
-                                {
-                                    if (robotMap.map[robotMap.x][robotMap.y - 1] == '*')
-                                    {
-                                        if (robotMap.map[robotMap.x + 1][robotMap.y - 1] == '*')
-                                        {
-                                            robotMap = showmap(robotMap);
-                                            endgame(robotMap);
-                                        }
-                                        else if (robotMap.map[robotMap.x + 1][robotMap.y - 1] != '*')
-                                        {
-                                            robotMap = moveUpRight(robotMap);
-                                            robotMap.counter++;
-                                        }
-                                    }
-                                    else if (robotMap.map[robotMap.x][robotMap.y - 1] != '*')
-                                    {
-                                        robotMap = moveup(robotMap);
-                                        robotMap.counter++;
-                                    }
-                                }
-                                else if (robotMap.map[robotMap.x + 1][robotMap.y - 1] != '*')
-                                {
-                                    robotMap = moveUpLeft(robotMap);
-                                    robotMap.counter++;
-                                }
-                            }
-                            else if (robotMap.map[robotMap.x + 1][robotMap.y] != '*')
-                            {
-                                robotMap = moveleft(robotMap);
-                                robotMap.counter++;
-                            }
-                        }
-                        else if (robotMap.map[robotMap.x - 1][robotMap.y + 1] != '*')
-                        {
-                            robotMap = moveDownLeft(robotMap);
-                            robotMap.counter++;
-                        }
-                    }
-                    else if (robotMap.map[robotMap.x][robotMap.y + 1] != '*')
-                    {
-                        robotMap = movedown(robotMap);
-                        robotMap.counter++;
-                    }
-                }
-                else if (robotMap.map[robotMap.x + 1][robotMap.y + 1] != '*')
-                {
-                    robotMap = moveDownRight(robotMap);
-                    robotMap.counter++;
-                }
-            }
-            else if (robotMap.map[robotMap.x + 1][robotMap.y] != '*')
-            {
-                robotMap = moveright(robotMap);
-                robotMap.counter++;
-            }
-        }
-    }
-    return (robotMap);
+
 }
 
 // * main 
 int main()
 {
+    char next;
     Map robotMap;
     /* Map keepMap; */
     robotMap = initmap(robotMap); //inicializo el mapa con solo puntos
@@ -252,8 +196,22 @@ int main()
     robotMap = initRobot(robotMap); //Situo al robot en las coordenadas recibidas
     robotMap = placerobot(robotMap);
     robotMap = showmap(robotMap);
-    robotMap = checkpath(robotMap);
-    robotMap = showmap(robotMap);
-/*     keepMap = robotMap; //Utilizo un auxiliar para poder analizar si hay movimientos viables */
+
+    std::cout << "Enter any printable character to continue..." << std::endl;
+    std::cin >> next;
+
+    while (next >= 32 && next <= 126)
+    {
+        robotMap = robotMove(robotMap);
+        robotMap = showmap(robotMap);
+        std::cout << "Enter any printable character to continue..." << std::endl;
+        std::cin >> next;
+    }
+    while (next <= 32 && next >= 126)
+    {
+        std::cout << "Incorrect letter, please enter any printable character to continue..." << std::endl;
+        std::cin >> next;
+    }
+
     return 0;
 }
