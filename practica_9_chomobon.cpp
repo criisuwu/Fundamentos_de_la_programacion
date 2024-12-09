@@ -16,18 +16,10 @@ struct Map
     char map[20][20]; //Hago una matriz 20 x 20
     int x; //Posición x
     int y; //Posición y
-    int counter; //contador de movimientos
+    int counter = 0; //contador de movimientos
 };
 
 /* funciones */
-// * print se acabo
-void endgame(Map robotMap)
-{
-    std::cout << "------------------------------------------------------------------" << std::endl;
-    std::cout << "No hay mas movimientos posibles" << std::endl;
-    std::cout << "Ha hecho un total de " << robotMap.counter << " movimientos" << std::endl;
-}
-
 // * Inicializo el mapa solo con "."
 Map initmap(Map robotMap)
 {
@@ -55,6 +47,19 @@ Map showmap(Map robotMap)
         std::cout << std::endl;
     }
     return (robotMap);
+}
+
+// * termina
+int endgame(Map robotMap)
+{
+
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap = showmap(robotMap);
+    std::cout << "------------------------------------------------------------------" << std::endl;
+    std::cout << "No hay mas movimientos posibles" << std::endl;
+    std::cout << "Ha hecho un total de " << robotMap.counter << " movimientos" << std::endl;
+
+    exit(0); // idk
 }
 
 // * Pido las coordenadas de donde va a ir el robot
@@ -94,95 +99,31 @@ Map placerobot(Map robotMap)
     return (robotMap);
 }
 
-// * avanza a la derecha
-Map moveright(Map robotMap)
-{
-    robotMap.y = robotMap.y + 1;
-    robotMap.map[robotMap.x][robotMap.y] = 'R';
-    robotMap.map[robotMap.x][robotMap.y - 1] = '*';
-
-    return (robotMap);
-}
-
-// * avanza a la izquierda
-Map moveleft(Map robotMap)
-{
-    robotMap.x = robotMap.x - 1;
-    robotMap.map[robotMap.x][robotMap.y] = 'R';
-    robotMap.map[robotMap.x + 1][robotMap.y] = '*';
-
-    return (robotMap);
-}
-
-// * avanza hacia arriba
-Map moveup(Map robotMap)
-{
-    robotMap.y = robotMap.y -1;
-    robotMap.map[robotMap.x][robotMap.y] = 'R';
-    robotMap.map[robotMap.x][robotMap.y + 1] = '*';
-
-    return (robotMap);
-}
-
-// * avanza hacia abajo
-Map movedown(Map robotMap)
-{
-    robotMap.y = robotMap.y + 1;
-    robotMap.map[robotMap.x][robotMap.y] ='R';
-    robotMap.map[robotMap.x][robotMap.y - 1] = '*';
-
-    return (robotMap);
-}
-
-// * avanza a arriba-derecha
-Map moveUpRight(Map robotMap)
-{
-    robotMap.x = robotMap.x + 1;
-    robotMap.y = robotMap.y - 1;
-    robotMap.map[robotMap.x][robotMap.y] = 'R';
-    robotMap.map[robotMap.x - 1][robotMap.y + 1] = '*';
-
-
-    return (robotMap);
-}
-
-// * avanza a arriba-izquierda
-Map moveUpLeft(Map robotMap)
-{
-    robotMap.x = robotMap.x - 1;
-    robotMap.y = robotMap.y - 1;
-    robotMap.map[robotMap.x][robotMap.y]= 'R';
-    robotMap.map[robotMap.x + 1][robotMap.y + 1] = '*';
-
-    return (robotMap);
-}
-
-// * avanza a abajo-derecha
-Map moveDownRight(Map robotMap)
-{
-    robotMap.x = robotMap.x + 1;
-    robotMap.y = robotMap.y + 1;
-    robotMap.map[robotMap.x][robotMap.y] = 'R';
-    robotMap.map[robotMap.x - 1][robotMap.y - 1] = '*';
-
-    return (robotMap);
-}
-
-// * avanza a abajo-izquierda
-Map moveDownLeft(Map robotMap)
-{
-    robotMap.x = robotMap.x - 1;
-    robotMap.y = robotMap.y + 1;;
-    robotMap.map[robotMap.x][robotMap.y] = 'R';
-    robotMap.map[robotMap.x + 1][robotMap.y - 1] = '*';
-
-    return (robotMap);
-}
-
 //hace que se mueva el robot para completar entero el mapa
 Map robotMove(Map robotMap)
 {
+    int movement_x[4] = {-1, 1, 0, 0};
+    int movement_y[4] = {0, 0, -1, 1};
 
+    robotMap.map[robotMap.x][robotMap.y] = '*';
+
+    for (int i = 0; i < 4; ++i)
+    {
+        int new_x = robotMap.x + movement_x[i];
+        int new_y = robotMap.y + movement_y[i];
+
+        if (new_x >= 0 && new_x < 20 && new_y >= 0 && new_y < 20 && robotMap.map[new_x][new_y] == '.')
+        {
+            robotMap.x = new_x;
+            robotMap.y = new_y;
+            robotMap.map[robotMap.x][robotMap.y] = 'R';
+            robotMap = showmap(robotMap);
+            robotMap.counter++;
+            return (robotMap);
+        }
+    }
+    endgame(robotMap); //Muestra el mapa y el numero de movimientos
+    return (robotMap);
 }
 
 // * main 
@@ -203,7 +144,7 @@ int main()
     while (next >= 32 && next <= 126)
     {
         robotMap = robotMove(robotMap);
-        robotMap = showmap(robotMap);
+/*         robotMap = showmap(robotMap); */
         std::cout << "Enter any printable character to continue..." << std::endl;
         std::cin >> next;
     }
