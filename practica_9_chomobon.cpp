@@ -149,7 +149,7 @@ int main()
     std::cout << "Enter any printable character to continue..." << std::endl;
     std::cin >> next;
 
-    while (next >= 32 && next <= 126)
+    while (next >= 32 && next <= 126 && gameState.canMove)
     {
         gameState = robotMove(gameState);
         if (gameState.canMove)
