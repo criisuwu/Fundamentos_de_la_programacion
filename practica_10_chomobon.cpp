@@ -20,26 +20,24 @@ Fecha: 10/diciembre/2024
 #include <cassert>
 
 /* funciones */
-// * main
-int main()
+// * funcion principal
+void solve_file()
 {
-    bool last_num = 0; //no hay mas numeros
+    bool last_num = 0; //no hay mas numeros en esa linea
     int sum_num;
-    //int num;
 
-    //num = 0;
     sum_num = 0;
     std::ifstream file("entrada.txt"); //Abre el archivo
     assert(file.is_open()); //Termina el programa en caso de fallo al abrir el archivo
     std::string line;
 
-    while (std::getline(file, line))
+    while (std::getline(file, line)) // va leyendo line a linea
     {
         static const size_t len_err = -1;
-        std::size_t pos1 = line.find('a');
-        std::size_t pos2 = line.find('z');
+        std::size_t pos1 = line.find('a'); //busca la posicion de la letra a
+        std::size_t pos2 = line.find('z'); //busca la posicion de la letra z
 
-        if(pos1 != len_err && pos2 != len_err && pos1 < pos2)
+        if(pos1 != len_err && pos2 != len_err && (pos1 < pos2)) //si las posiciones son mayores que -1 y la posicion 1 es menor que la 2
         {
             std::string az_str = line.substr(pos1 + 1, pos2 - pos1 - 1); //Donde encuentra la a + 1 = num y pos2 - pos1 -1 me da la pos del num desde la posicion
             std::string num_as_str;
@@ -48,24 +46,15 @@ int main()
                 char ch_num = az_str[i]; //al ser una string tiene posiciones y por ello las puedo recorrer
                 if (ch_num >= '0' && ch_num <= '9') //Lo uso para ver si es un numero
                 {
-                    std::cout << "1nas: " << num_as_str << std::endl;
-                    num_as_str += ch_num;
-                    std::cout << "2nas: " << num_as_str << std::endl;
-                    last_num = 1;
+                    num_as_str += ch_num; //lo voy añadiendo a mi strings de numeros
+                    last_num = 1; //lo paso a verdadero
                 }
-                /* else if(last_num)
-                {
-                    sum_num = std::stoi(num_as_str);
-                    std::cout << "tnas: " << num_as_str << std::endl;
-                    num_as_str = ""; //Lo uso para resetear el numero que esta usando y que no de fallo
-                    last_num = 0;
-                } */
             }
-            if (last_num) //Por si hay un ultimo numero para añadirlo
+            if (last_num) //Por si ya no hay mas numeros (por si es de dos, tres... cifras)
             {
-                sum_num += std::stoi(num_as_str);
-                num_as_str = "";
-                last_num = 0;
+                sum_num += std::stoi(num_as_str); //lo paso a numero y hago la suma
+                num_as_str = ""; //Con esto reseteo para que no haya ningun numero y que no genere conflicto
+                last_num = 0; //lo paso a falso
             }
         }
     }
@@ -73,5 +62,11 @@ int main()
 
     file.close(); //Cierra el archivo
     std::cout << "La suma total de los numeros es: " << sum_num << std::endl; 
+}
+
+// * main
+int main()
+{
+    solve_file();
     return(0);
 }
