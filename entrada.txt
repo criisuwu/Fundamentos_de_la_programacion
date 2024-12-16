@@ -33,4 +33,7 @@ a45
 z4
 a67g
 a0z
+z4
+a67g
+a0z
 aaaaaaaaa92az
