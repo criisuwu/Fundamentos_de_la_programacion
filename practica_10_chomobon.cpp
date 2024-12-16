@@ -41,7 +41,7 @@ int main()
 
         if(pos1 != len_err && pos2 != len_err && pos1 < pos2)
         {
-            std::string az_str = line.substr(pos1 + 1, pos2 - pos1 - 1); //Donde encuentra la a + 1 = num y pos2 - pos1 -1 me da la pos del num desde la ultima posicion
+            std::string az_str = line.substr(pos1 + 1, pos2 - pos1 - 1); //Donde encuentra la a + 1 = num y pos2 - pos1 -1 me da la pos del num desde la posicion
             std::string num_as_str;
             for (std::size_t i = 0; i < az_str.length(); i++)
             {
@@ -53,14 +53,14 @@ int main()
                     std::cout << "2nas: " << num_as_str << std::endl;
                     last_num = 1;
                 }
-/*                 else if(last_num)
+                /* else if(last_num)
                 {
                     sum_num = std::stoi(num_as_str);
                     std::cout << "tnas: " << num_as_str << std::endl;
                     num_as_str = ""; //Lo uso para resetear el numero que esta usando y que no de fallo
                     last_num = 0;
-                }
-            } */
+                } */
+            }
             if (last_num) //Por si hay un ultimo numero para añadirlo
             {
                 sum_num += std::stoi(num_as_str);
