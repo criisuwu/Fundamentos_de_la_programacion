@@ -17,6 +17,8 @@ struct Map
     int x; //Posición x
     int y; //Posición y
     int counter = 0; //contador de movimientos
+    //me falta contar las celdas libres
+
 };
 
 // * Lo utilizo para comprobar que ha terminado o no el programa
