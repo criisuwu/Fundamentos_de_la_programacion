@@ -15,6 +15,12 @@ Fecha: 17/diciembre/2024
 
 /* estructuras */
 //Podria agregar otra estructura solo para el robot y sus coordenadas asi lograria que el mapa no se modifique(?)
+/* // ? del robot
+struct Robot
+{
+    int coor_x;
+    int coor_y;
+}; */
 // ? La del mapa
 struct Map
 {
@@ -22,22 +28,34 @@ struct Map
     int x;
     int y;
     int counter = 0;
+    int x_robot;
+    int y_robot;
 };
 
 // ? para comprobar el movimiento
 struct GameState
 {
-    Map robotMap;
     bool canMove;
+    Map robotMap;
 };
 
 /* funciones */
 // * situamos al robot
 Map placerobot(Map robotMap, int& x, int& y)
 {
-    robotMap.x = x;
-    robotMap.y = y;
-    robotMap.map[robotMap.x][robotMap.y] = 'R';
+    robotMap.x_robot = x;
+    robotMap.y_robot = y;
+    robotMap.map[robotMap.x_robot][robotMap.y_robot] = 'R';
+
+    return (robotMap);
+}
+
+// * situamos los objetos
+Map placeobstacules(Map robotMap, int x, int y)
+{
+    robotMap.x_robot = x;
+    robotMap.y_robot = y;
+    robotMap.map[robotMap.x_robot][robotMap.y_robot] = '#';
 
     return (robotMap);
 }
@@ -60,7 +78,7 @@ Map initmap(Map robotMap, int x, int y)
 // * mostramos el mapa
 Map showmap(Map robotMap)
 {
-    //system("clear");
+    system("clear");
 
     for (int i = 0; i < robotMap.x; i++)
     {
@@ -131,6 +149,35 @@ Map robotread(Map& robotMap, std::ifstream& file, int& x, int& y)
     return (robotMap);
 }
 
+// * siguientes lineas para los obstaculos
+Map readobstacles(Map robotMap, std::ifstream& file, int& x, int& y)
+{
+    std::string line;
+
+    while (std::getline(file, line))
+    {
+        static const size_t len_err = -1;
+        std::size_t coma = line.find(',');
+
+        if (coma != len_err)
+        {
+            std::string firstnum = line.substr(0, coma); //obtengo la primera coordenada
+            std::string secondnum = line.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
+            x = stoi(firstnum);
+            y = stoi(secondnum);
+            if (x >= 0)
+            {
+                if (y >= 0)
+                {
+                    robotMap = placeobstacules(robotMap, x, y);
+                    showmap (robotMap);
+                }
+            }
+        }
+    }
+    return (robotMap);
+}
+
 // * main
 int main()
 {
@@ -147,7 +194,7 @@ int main()
     coor_y = 0;
     gameState.robotMap = sizeread(gameState.robotMap, file, coor_x, coor_y);
     gameState.robotMap = robotread(gameState.robotMap, file, coor_x, coor_y); // No me lo situa me lo modifica
-    //while(std::getline(file, line)) // ! sera para los objetos
+    gameState.robotMap = readobstacles(gameState.robotMap, file, coor_x, coor_y);
     file.close();
     return (0);
 }
