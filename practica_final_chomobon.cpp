@@ -31,33 +31,25 @@ struct GameState
 };
 
 /* funciones */
-// * cambiar a numero la primera coordenada
-Map changenum1(Map robotMap, std::string coor_x)
+// * situamos al robot
+Map placerobot(Map robotMap)
 {
-    robotMap.x = stoi(coor_x);
-    return (robotMap);
-}
+    robotMap.map[robotMap.x][robotMap.y = 'R'];
 
-// * cambio a numero la segunda coordenada
-Map changenum2(Map robotMap, std::string coor_y)
-{
-    robotMap.x = stoi(coor_y);
     return (robotMap);
 }
 
 // * inicializamos el mapa
-Map initmap(Map robotMap)
+Map initmap(Map robotMap, int x, int y)
 {
+    robotMap.x = x;
+    robotMap.y = y;
     for (int i = 0; i <= robotMap.x; i++)
     {
-        std::cout << robotMap.x << std::endl;
         for (int j = 0; j <= robotMap.y; j++)
         {
-            std::cout << robotMap.y << std::endl;
-            std::cout << j << std::endl;
             robotMap.map[i][j] = '.';
         }
-        std::cout << i << std::endl;
     }
     return (robotMap);
 }
@@ -65,6 +57,8 @@ Map initmap(Map robotMap)
 // * mostramos el mapa
 Map showmap(Map robotMap)
 {
+    system("clear");
+
     for (int i = 0; i < robotMap.x; i++)
     {
         for (int j = 0; j < robotMap.y; j++)
@@ -72,6 +66,60 @@ Map showmap(Map robotMap)
             std::cout << robotMap.map[i][j] << " ";
         }
         std::cout << std::endl;
+    }
+    return (robotMap);
+}
+
+// * Leer primera line (tamaño del mapa)
+Map sizeread(Map robotMap, std::ifstream& file, int& x, int& y)
+{
+    std::string firstline;
+
+    std::getline(file, firstline);
+    static const size_t len_err = -1;
+    std::size_t coma = firstline.find(',');
+
+    if (coma != len_err)
+    {
+        std::string firstnum = firstline.substr(0, coma); //obtengo la primera coordenada
+        std::string secondnum = firstline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
+        x = stoi(firstnum);
+        y = stoi(secondnum);
+        if (x >= 0)
+        {
+            if (y >= 0)
+            {
+                robotMap = initmap(robotMap, x, y);
+                showmap(robotMap);
+            }
+        }
+    }
+    return (robotMap);
+}
+
+// * Leer la segunda linea (posicionamiento del robot)
+Map robotread(Map robotMap, std::ifstream& file, int& x, int& y)
+{
+    std::string secondline;
+
+    std::getline(file, secondline);
+    static const size_t len_err = -1;
+    std::size_t coma = secondline.find(',');
+
+    if (coma != len_err)
+    {
+        std::string firstnum = secondline.substr(0, coma); //obtengo la primera coordenada
+        std::string secondnum = secondline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
+        x = stoi(firstnum);
+        y = stoi(secondnum);
+        if (x >= 0)
+        {
+            if (y >= 0)
+            {
+                robotMap = placerobot(robotMap);
+                showmap(robotMap);
+            }
+        }
     }
     return (robotMap);
 }
@@ -85,27 +133,14 @@ int main()
     assert(file.is_open());
     std::string line;
 
-    while(std::getline(file, line))
-    {
-        static const size_t len_err = -1;
-        std::size_t coma = line.find(',');
+    int coor_x;
+    int coor_y;
 
-        if (coma != len_err)
-        {
-            std::string firstnum = line.substr(0, coma); //obtengo la primera coordenada
-            std::string secondnum = line.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
-            changenum1(gameState.robotMap, firstnum);
-            changenum2(gameState.robotMap, secondnum);
-            if (robotMap.x >= 0)
-            {
-                if (robotMap.y >= 0)
-                {
-                    gameState.robotMap = initmap(gameState.robotMap);
-                    gameState.robotMap = showmap(gameState.robotMap);
-                }
-            }
-        }
-        file.close();
-        return (0);
-    }
+    coor_x = 0;
+    coor_y = 0;
+    //while(std::getline(file, line)) // ! sera para los objetos
+    gameState.robotMap = sizeread(gameState.robotMap, file, coor_x, coor_y);
+    gameState.robotMap = robotread(gameState.robotMap, file, coor_x, coor_y);
+    file.close();
+    return (0);
 }
