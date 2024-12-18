@@ -14,6 +14,7 @@ Fecha: 17/diciembre/2024
 #include <cassert>
 
 /* estructuras */
+//Podria agregar otra estructura solo para el robot y sus coordenadas asi lograria que el mapa no se modifique(?)
 // ? La del mapa
 struct Map
 {
@@ -32,9 +33,11 @@ struct GameState
 
 /* funciones */
 // * situamos al robot
-Map placerobot(Map robotMap)
+Map placerobot(Map robotMap, int& x, int& y)
 {
-    robotMap.map[robotMap.x][robotMap.y = 'R'];
+    robotMap.x = x;
+    robotMap.y = y;
+    robotMap.map[robotMap.x][robotMap.y] = 'R';
 
     return (robotMap);
 }
@@ -57,7 +60,7 @@ Map initmap(Map robotMap, int x, int y)
 // * mostramos el mapa
 Map showmap(Map robotMap)
 {
-    system("clear");
+    //system("clear");
 
     for (int i = 0; i < robotMap.x; i++)
     {
@@ -75,22 +78,24 @@ Map sizeread(Map robotMap, std::ifstream& file, int& x, int& y)
 {
     std::string firstline;
 
-    std::getline(file, firstline);
-    static const size_t len_err = -1;
-    std::size_t coma = firstline.find(',');
-
-    if (coma != len_err)
+    if (std::getline(file, firstline))
     {
-        std::string firstnum = firstline.substr(0, coma); //obtengo la primera coordenada
-        std::string secondnum = firstline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
-        x = stoi(firstnum);
-        y = stoi(secondnum);
-        if (x >= 0)
+        static const size_t len_err = -1;
+        std::size_t coma = firstline.find(',');
+
+        if (coma != len_err)
         {
-            if (y >= 0)
+            std::string firstnum = firstline.substr(0, coma); //obtengo la primera coordenada
+            std::string secondnum = firstline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
+            x = stoi(firstnum);
+            y = stoi(secondnum);
+            if (x >= 0)
             {
-                robotMap = initmap(robotMap, x, y);
-                showmap(robotMap);
+                if (y >= 0)
+                {
+                    robotMap = initmap(robotMap, x, y);
+                    showmap(robotMap);
+                }
             }
         }
     }
@@ -98,26 +103,28 @@ Map sizeread(Map robotMap, std::ifstream& file, int& x, int& y)
 }
 
 // * Leer la segunda linea (posicionamiento del robot)
-Map robotread(Map robotMap, std::ifstream& file, int& x, int& y)
+Map robotread(Map& robotMap, std::ifstream& file, int& x, int& y)
 {
     std::string secondline;
 
-    std::getline(file, secondline);
-    static const size_t len_err = -1;
-    std::size_t coma = secondline.find(',');
-
-    if (coma != len_err)
+    if (std::getline(file, secondline))
     {
-        std::string firstnum = secondline.substr(0, coma); //obtengo la primera coordenada
-        std::string secondnum = secondline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
-        x = stoi(firstnum);
-        y = stoi(secondnum);
-        if (x >= 0)
+        static const size_t len_err = -1;
+        std::size_t coma = secondline.find(',');
+
+        if (coma != len_err)
         {
-            if (y >= 0)
+            std::string firstnum = secondline.substr(0, coma); //obtengo la primera coordenada
+            std::string secondnum = secondline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
+            x = stoi(firstnum);
+            y = stoi(secondnum);
+            if (x >= 0)
             {
-                robotMap = placerobot(robotMap);
-                showmap(robotMap);
+                if (y >= 0)
+                {
+                    robotMap = placerobot(robotMap, x, y);
+                    showmap(robotMap);
+                }
             }
         }
     }
@@ -138,9 +145,9 @@ int main()
 
     coor_x = 0;
     coor_y = 0;
-    //while(std::getline(file, line)) // ! sera para los objetos
     gameState.robotMap = sizeread(gameState.robotMap, file, coor_x, coor_y);
-    gameState.robotMap = robotread(gameState.robotMap, file, coor_x, coor_y);
+    gameState.robotMap = robotread(gameState.robotMap, file, coor_x, coor_y); // No me lo situa me lo modifica
+    //while(std::getline(file, line)) // ! sera para los objetos
     file.close();
     return (0);
 }
