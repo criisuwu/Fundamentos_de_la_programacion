@@ -15,12 +15,7 @@ Fecha: 17/diciembre/2024
 
 /* estructuras */
 //Podria agregar otra estructura solo para el robot y sus coordenadas asi lograria que el mapa no se modifique(?)
-/* // ? del robot
-struct Robot
-{
-    int coor_x;
-    int coor_y;
-}; */
+
 // ? La del mapa
 struct Map
 {
@@ -41,8 +36,24 @@ struct GameState
 
 /* funciones */
 // * situamos al robot
-Map placerobot(Map robotMap, int& x, int& y)
+Map placerobot(Map robotMap, int& x, int& y, std::ifstream& file)
 {
+    std::string nextline;
+
+    if (x < 0 || y < 0 || x >= robotMap.x || y >= robotMap.y)
+    {
+        std::getline(file, nextline);
+        static const size_t len_err = -1;
+        std::size_t coma = nextline.find(',');
+
+        if (coma != len_err)
+        {
+            std::string firstnum = nextline.substr(0, coma); //obtengo la primera coordenada
+            std::string secondnum = nextline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
+            x = stoi(firstnum);
+            y = stoi(secondnum);
+        }
+    }
     robotMap.x_robot = x;
     robotMap.y_robot = y;
     robotMap.map[robotMap.x_robot][robotMap.y_robot] = 'R';
@@ -56,7 +67,7 @@ Map placeobstacules(Map robotMap, int x, int y)
     robotMap.x_robot = x;
     robotMap.y_robot = y;
     robotMap.map[robotMap.x_robot][robotMap.y_robot] = '#';
-
+    
     return (robotMap);
 }
 
@@ -107,6 +118,28 @@ Map sizeread(Map robotMap, std::ifstream& file, int& x, int& y)
             std::string secondnum = firstline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
             x = stoi(firstnum);
             y = stoi(secondnum);
+            while (x <= 0 || y <= 0)
+            {
+                std::getline(file, firstline);
+                static const size_t len_err = -1;
+                std::size_t coma = firstline.find(',');
+
+                if (coma != len_err)
+                {
+                    std::string firstnum = firstline.substr(0, coma); //obtengo la primera coordenada
+                    std::string secondnum = firstline.substr(coma + 1, coma + 2); //obtengo la segunda coordenada
+                    x = stoi(firstnum);
+                    y = stoi(secondnum);
+                    if (x >= 0)
+                    {
+                        if (y >= 0)
+                        {
+                            robotMap = initmap(robotMap, x, y);
+                            showmap(robotMap);
+                        }
+                    }
+                }
+            }
             if (x >= 0)
             {
                 if (y >= 0)
@@ -140,7 +173,7 @@ Map robotread(Map& robotMap, std::ifstream& file, int& x, int& y)
             {
                 if (y >= 0)
                 {
-                    robotMap = placerobot(robotMap, x, y);
+                    robotMap = placerobot(robotMap, x, y, file);
                     showmap(robotMap);
                 }
             }
@@ -193,8 +226,8 @@ int main()
     coor_x = 0;
     coor_y = 0;
     gameState.robotMap = sizeread(gameState.robotMap, file, coor_x, coor_y);
-    gameState.robotMap = robotread(gameState.robotMap, file, coor_x, coor_y); // No me lo situa me lo modifica
-    gameState.robotMap = readobstacles(gameState.robotMap, file, coor_x, coor_y);
+    //gameState.robotMap = robotread(gameState.robotMap, file, coor_x, coor_y); // No me lo situa me lo modifica
+    //gameState.robotMap = readobstacles(gameState.robotMap, file, coor_x, coor_y);
     file.close();
     return (0);
 }
