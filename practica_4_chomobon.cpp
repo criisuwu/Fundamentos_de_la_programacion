@@ -33,14 +33,14 @@ void times_table()
 void stadistic()
 {
     int student_num;
-    float height;
-    float table[4][2]; //El cuatro corresponde al numero de grupos que hay, y el 2 corresponde al 0 = dato, 1 = contador 
-    float sum = 0;
-    float average_g1;
-    float average_g2;
-    float average_g3;
-    float average_g4;
-    float average_total;
+    double height;
+    double table[4][2]; //El cuatro corresponde al numero de grupos que hay, y el 2 corresponde al 0 = dato, 1 = contador 
+    double sum = 0;
+    double average_g1;
+    double average_g2;
+    double average_g3;
+    double average_g4;
+    double average_total;
 
     //Con este buble inicializo todos los grupos a 0 para evitar errores
     for (int i = 0; i < 4; i++)
@@ -59,25 +59,21 @@ void stadistic()
             if (height <= 1.60)
             {
                 table[0][0] = table[0][0] + height; //grupo 1, posicion de datos
-                printf("%f\n", table[0][0]);
                 table[0][1]++; //Le sumo uno al contador
             }
             else if (height <= 1.70 && height > 1.60)
             {
                 table[1][0] = table[1][0] + height;
-                printf("%f\n", table[1][0]);
                 table[1][1]++;
             }
             else if (height <= 1.80 && height > 1.70)
             {
                 table[2][0] = table[2][0] + height;
-                printf("%f\n", table[2][0]);
                 table[2][1]++;
             }
             else if (height > 1.80)
             {
                 table[3][0] = table[3][0] + height;
-                printf("%f\n", table[3][0]);
                 table[3][1]++;
             }
             else
