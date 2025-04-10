@@ -42,6 +42,10 @@ void stadistic()
     float average_g4;
     float average_total;
 
+    //Con este buble inicializo todos los grupos a 0 para evitar errores
+    for (int i = 0; i < 4; i++)
+        table[i][0] = 0;
+
     std::cout << "Porfavor ingrese el numero de estudiantes quiere incluir en la estadistica: ";
     std::cin >> student_num;
     std::cout << std::endl;
@@ -54,22 +58,26 @@ void stadistic()
             sum += height;
             if (height <= 1.60)
             {
-                table[0][0] += height; //grupo 1, posicion de datos
+                table[0][0] = table[0][0] + height; //grupo 1, posicion de datos
+                printf("%f\n", table[0][0]);
                 table[0][1]++; //Le sumo uno al contador
             }
             else if (height <= 1.70 && height > 1.60)
             {
-                table[1][0] += height;
+                table[1][0] = table[1][0] + height;
+                printf("%f\n", table[1][0]);
                 table[1][1]++;
             }
             else if (height <= 1.80 && height > 1.70)
             {
-                table[2][0] += height;
+                table[2][0] = table[2][0] + height;
+                printf("%f\n", table[2][0]);
                 table[2][1]++;
             }
             else if (height > 1.80)
             {
-                table[3][0] += height;
+                table[3][0] = table[3][0] + height;
+                printf("%f\n", table[3][0]);
                 table[3][1]++;
             }
             else
