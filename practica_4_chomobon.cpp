@@ -39,9 +39,11 @@ void heights_calc()
     double average_groups[4]; //Una media para cada grupo
     double average_total;
 
-    //Con este buble inicializo todos los grupos a 0 para evitar errores
+    //Con este buble inicializo todos los grupos, los contadores y las medias a 0 para evitar errores
     for (int i = 0; i < 4; i++)
         groups[i] = 0;
+    for (int i = 0; i < 4; i++)
+        count[i] = 0;
     for (int i = 0; i < 4; i++)
         average_groups[i] = 0;
 
@@ -54,7 +56,7 @@ void heights_calc()
     {
         std::cout << "Valor incorrecto" << std::endl;
         std::cout << "------------------------------------------------------------" << std::endl;
-        heights_calc;
+        heights_calc();
     }
     for (int i = 0; i < student_num; i++)
     {
@@ -64,41 +66,41 @@ void heights_calc()
 
         if (height <= 1.60)
         {
-            groups[0] += height;
-            count[0] += 1;
+            groups[0] = groups[0] + height;
+            count[0] = count[0] + 1;
         }
         else if (height <= 1.70 && height > 1.60)
         {
-            groups[1] += height;
-            count[1] += 1;
+            groups[1] = groups[1] + height;
+            count[1] = count[1] + 1;
         }
         else if (height <= 1.80 && height > 1.70)
         {
-            groups[2] += height;
-            count[2] += 1;
+            groups[2] = groups[2] + height;
+            count[2] = count[2] + 1;
         }
         else if (height > 1.80)
         {
-            groups[3] += height;
-            count[3] += 1;
+            groups[3] = groups[3] + height;
+            count[3] = count[3] + 1;
         }
         else
             std::cout << "Argumento invalido" << std::endl;
         
-        //Verificacion de que las medias no den 0 o algun error
-        for (int i = 0; i < 4; i++)
-        {
-            if (groups[i] <= 0)
-                average_groups[i] = 0;
-            else
-                average_groups[i] = groups[i] / count[i];
-        }
-        average_total = sum / student_num;
-
-        for (int i = 0; i < 4; i++)
-            std::cout << "La media del grupo" << i <<  "es: " << average_groups[i] << std::endl;
-        std::cout << "La media total es: " << average_total << std::endl;
     }
+    //Verificacion de que las medias no den 0 o algun error
+    for (int i = 0; i < 4; i++)
+    {
+        if (groups[i] <= 0)
+            average_groups[i] = 0;
+        else
+            average_groups[i] = groups[i] / count[i];
+    }
+    average_total = sum / student_num;
+
+    for (int i = 0; i < 4; i++)
+        std::cout << "La media del grupo " << i <<  " es: " << average_groups[i] << std::endl;
+    std::cout << "La media total es: " << average_total << std::endl;
 }
 /* main */
 int main()
