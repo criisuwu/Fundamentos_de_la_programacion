@@ -23,19 +23,19 @@ void interface()
 // * Recolecta de datos
 void data()
 {
-    int temperature[21] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    int w_average;
-    int d_average;
-    int m_average;
-    int no_average;
-    int ni_average;
+    double temperature[21] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    double w_average;
+    double d_average;
+    double m_average;
+    double no_average;
+    double ni_average;
     int iterator;
     int iterator2;
-    int m_temperature;
-    int no_temperature;
-    int ni_temperature;
+    double m_temperature;
+    double no_temperature;
+    double ni_temperature;
 
-    iterator = 1;
+    iterator = 0;
     iterator2 = 0;
     w_average = 0;
     d_average = 0;
@@ -43,10 +43,10 @@ void data()
     no_average = 0;
     ni_average = 0;
     interface();
-    while (iterator <= 7)
+    while (iterator < 7)
     {
         std::cout << "*******************************************************" << std::endl;
-        std::cout << "Porfavor introduzca los datos correspondientes del día "<< iterator << std::endl;
+        std::cout << "Porfavor introduzca los datos correspondientes del día "<< iterator + 1 << std::endl;
         std::cout << "-------------------------------------------------------" << std::endl;
 
         std::cout << "Introduzca la temperatura al amanecer" << std::endl;
@@ -98,38 +98,41 @@ void data()
     std::cout << "La temperarura media del atardecer es: " << ni_average << std::endl;
     std::cout << "La temperarura media de la semana es: " << w_average << std::endl;
     iterator = 1;
+    iterator2 = 1;
     while (iterator < 8)
     {
-        d_average += temperature[iterator - 1];
-        d_average += temperature[iterator];
-        d_average += temperature[iterator + 1];
+        d_average += temperature[iterator2 - 1];
+        d_average += temperature[iterator2];
+        d_average += temperature[iterator2 + 1];
         d_average = d_average / 3;
         if (d_average >= w_average)
         {
             std::cout << "*****************************************************************" << std::endl;
-            std::cout << "La temperarura media del dia " << iterator << " es: " << m_average << std::endl;
-            std::cout << "Y es mayor a la temperatura media de la semana." << std::endl;
+            std::cout << "La temperarura media del dia " << iterator << " es: " << d_average << std::endl;
+            std::cout << "Y es mayor a la temperatura media de la semana." << std::endl; //Esto lo tengo que cambiar
         }
         else
         {
             std::cout << "*****************************************************************" << std::endl;
-            std::cout << "La temperarura media del dia " << iterator << " es: " << m_average << std::endl;
+            std::cout << "La temperarura media del dia " << iterator << " es: " << d_average << std::endl;
         }
         d_average = 0;
+        iterator2 = iterator2 + 3;
         iterator++;
     }
     iterator = 1;
     iterator2 = 0;
     while (iterator < 8)
     {
+        std::cout << "*****************************************************************" << std::endl;
         std::cout << "Las temperaturas recogidas en el dia " << iterator << " son:" << std::endl;
         std::cout << "La temperarura del amanecer es " << temperature[iterator2] << std::endl;
         std::cout << "La temperarura del medio dia es " << temperature[iterator2 + 1] << std::endl;
         std::cout << "La temperarura del atardecer es " << temperature[iterator2 + 2] << std::endl;
-        std::cout << "*****************************************************************" << std::endl;
         iterator++;
         iterator2 = iterator2 + 3;
     }
+    std::cout << "*****************************************************************" << std::endl;
 }
 
 /* main */

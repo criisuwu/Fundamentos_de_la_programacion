@@ -52,7 +52,7 @@ Map showmap(Map robotMap)
     {
         for (int j = 0; j < 20; j++)
         {
-            std::cout << robotMap.map[i][j];
+            std::cout << robotMap.map[i][j] << " ";
         }
         std::cout << std::endl;
     }
@@ -106,8 +106,9 @@ Map placerobot(Map robotMap)
     return (robotMap);
 }
 
-//hace que se mueva el robot para completar entero el mapa
-GameState robotMove(GameState gameState)
+// * Este movimiento solo se debe de realizar si la r esta
+// * situado en las esquinas
+GameState corner_robotMove(GameState gameState)
 {
     Map robotMap = gameState.robotMap;
 
@@ -131,6 +132,72 @@ GameState robotMove(GameState gameState)
             return {robotMap, true};
         }
     }
+    endgame(robotMap); //Muestra el mapa y el numero de movimientos
+    return {robotMap, false};
+}
+
+// * Ahora valoro los casos diferentes a las esquinas
+GameState secondcuadrant_robotMove(GameState gameState)
+{
+    Map robotMap = gameState.robotMap;
+
+    int move_x[4] = {1, -1, 0, 0};
+    int move_y[4] = {0, 0, -1, 1};
+    int s_check_x = robotMap.x;
+    int s_check_y = robotMap.y;
+
+    for (int i = 0; i < 4; i++)
+    {
+        int new_x = robotMap.x + move_x[i];
+        int new_y = robotMap.y + move_y[i];
+
+        while (new_x >= 0 && new_x < 20 && new_y >= 0 && new_y < 20 && robotMap.map[new_x][new_y] == '.')
+        {
+            robotMap.x = new_x;
+            robotMap.y = new_y;
+            robotMap.map[robotMap.x][robotMap.y] = 'R';
+            if ((s_check_x == robotMap.x - 1) && s_check_y == robotMap.y)
+            {
+                int new_x = robotMap.x + move_x[3];
+                int new_y = robotMap.y + move_y[3];
+                robotMap.x = new_x;
+                robotMap.y = new_y;
+                robotMap.map[robotMap.x][robotMap.y] = 'R';
+                robotMap = showmap(robotMap);
+                robotMap.counter++;
+                return {robotMap, true};
+            }
+            else
+            {
+                robotMap.x = new_x;
+                robotMap.y = new_y;
+                robotMap.map[robotMap.x][robotMap.y] = 'R';
+                robotMap = showmap(robotMap);
+                robotMap.counter++;
+                return {robotMap, true};
+            }
+        }
+    }
+    endgame(robotMap); //Muestra el mapa y el numero de movimientos
+    return {robotMap, false};
+}
+
+// * La fucion del movimiento
+GameState robotMove(GameState gameState)
+{
+    Map robotMap = gameState.robotMap;
+
+    if ((robotMap.x == 0 && robotMap.y ==0) || (robotMap.x == 19 && robotMap.y == 19)
+            || (robotMap.x == 0 && robotMap.y == 19) || (robotMap.x == 19 && robotMap.y == 0))
+    {
+        return corner_robotMove(gameState);
+    }
+    else if (robotMap.x > 9 && robotMap.y > 9)
+    {
+        return secondcuadrant_robotMove(gameState);
+    }
+    
+    //Otro if para implementar el secondcuadrant
     endgame(robotMap); //Muestra el mapa y el numero de movimientos
     return {robotMap, false};
 }

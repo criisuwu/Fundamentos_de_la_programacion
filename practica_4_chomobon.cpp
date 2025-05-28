@@ -29,86 +29,77 @@ void times_table()
 }
 
 // * estadistica de estaturas
-
-void stadistic()
+void heights_calc()
 {
+    int count[4]; //Los contadores para saber cuantos datos se han almacenado en cada grupo
     int student_num;
     double height;
-    double table[4][2]; //El cuatro corresponde al numero de grupos que hay, y el 2 corresponde al 0 = dato, 1 = contador 
+    double groups[4]; //Los datos de cada grupo
     double sum = 0;
-    double average_g1;
-    double average_g2;
-    double average_g3;
-    double average_g4;
+    double average_groups[4]; //Una media para cada grupo
     double average_total;
 
     //Con este buble inicializo todos los grupos a 0 para evitar errores
     for (int i = 0; i < 4; i++)
-        table[i][0] = 0;
+        groups[i] = 0;
+    for (int i = 0; i < 4; i++)
+        average_groups[i] = 0;
 
+    //Imprimo el mensaje de lo que quiero que inserten
     std::cout << "Porfavor ingrese el numero de estudiantes quiere incluir en la estadistica: ";
     std::cin >> student_num;
     std::cout << std::endl;
 
-    if (student_num > 0){
-        for (int i = 0; i < student_num; i++)
-        {
-            std::cout << "Ingrese la altura del estudiante " << i + 1 << " en metros: ";
-            std::cin >> height;
-            sum += height;
-            if (height <= 1.60)
-            {
-                table[0][0] = table[0][0] + height; //grupo 1, posicion de datos
-                table[0][1]++; //Le sumo uno al contador
-            }
-            else if (height <= 1.70 && height > 1.60)
-            {
-                table[1][0] = table[1][0] + height;
-                table[1][1]++;
-            }
-            else if (height <= 1.80 && height > 1.70)
-            {
-                table[2][0] = table[2][0] + height;
-                table[2][1]++;
-            }
-            else if (height > 1.80)
-            {
-                table[3][0] = table[3][0] + height;
-                table[3][1]++;
-            }
-            else
-                std::cout << "Argumento invalido" << std::endl;
-        }
-        if (table[0][1] == 0)
-            average_g1 = 0;
-        else
-            average_g1 = table[0][0] / table[0][1];
-        if (table[1][1] == 0)
-            average_g2 = 0;
-        else
-            average_g2 = table[1][0] / table[1][1];
-        if (table[2][1] == 0)
-            average_g3 = 0;
-        else
-            average_g3 = table[2][0] / table[2][1];
-        if (table[3][1] == 0)
-            average_g4 = 0;
-        else
-            average_g4 = table[3][0] / table[3][1];
-        average_total = sum / student_num;
-        std::cout << "La media del primer grupo es: " << average_g1 << std::endl;
-        std::cout << "La media del segundo grupo es: " << average_g2 << std::endl;
-        std::cout << "La media del tercer grupo es: " << average_g3 << std::endl;
-        std::cout << "La media del cuarto grupo es: " << average_g4 << std::endl;
-        std::cout << "La media total es: " << average_total << std::endl;
-    }
-    else
+    if (student_num <= 0)
     {
         std::cout << "Valor incorrecto" << std::endl;
-        stadistic();
+        std::cout << "------------------------------------------------------------" << std::endl;
+        heights_calc;
+    }
+    for (int i = 0; i < student_num; i++)
+    {
+        std::cout << "Ingrese la altura del estudiante " << i + 1 << " en metros: ";
+        std::cin >> height;
+        sum += height;
+
+        if (height <= 1.60)
+        {
+            groups[0] += height;
+            count[0] += 1;
+        }
+        else if (height <= 1.70 && height > 1.60)
+        {
+            groups[1] += height;
+            count[1] += 1;
+        }
+        else if (height <= 1.80 && height > 1.70)
+        {
+            groups[2] += height;
+            count[2] += 1;
+        }
+        else if (height > 1.80)
+        {
+            groups[3] += height;
+            count[3] += 1;
+        }
+        else
+            std::cout << "Argumento invalido" << std::endl;
+        
+        //Verificacion de que las medias no den 0 o algun error
+        for (int i = 0; i < 4; i++)
+        {
+            if (groups[i] <= 0)
+                average_groups[i] = 0;
+            else
+                average_groups[i] = groups[i] / count[i];
+        }
+        average_total = sum / student_num;
+
+        for (int i = 0; i < 4; i++)
+            std::cout << "La media del grupo" << i <<  "es: " << average_groups[i] << std::endl;
+        std::cout << "La media total es: " << average_total << std::endl;
     }
 }
-
 /* main */
 int main()
 {
@@ -121,7 +112,7 @@ int main()
     std::cin >> option;
     if (option == 1)
     {
-        stadistic();
+        heights_calc();
         std::cout << "Problema " << option << " solucionado! :)" << std::endl;
     }
     else if (option == 2)
